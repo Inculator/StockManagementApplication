@@ -26,6 +26,6 @@ public class GetPermutations {
      
     public static void main(String[] args) 
     {
-        StringPermutation("ABCDEFGHIJKLMNO");
+        StringPermutation("ABCDE");
     }    
 }    
