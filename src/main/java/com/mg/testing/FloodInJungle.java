@@ -1,5 +1,6 @@
 package com.mg.testing;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -51,7 +52,7 @@ public class FloodInJungle {
 		Integer noOfTrees = Integer.parseInt(firstLine[0]);
 		Double totalCapacity = Double.parseDouble(firstLine[1]);
 
-		Integer treesUsed = 0;
+		ArrayList<Integer> treesUsedList = new ArrayList<>();
 
 		Map<Integer, Tree> treeMap = new HashMap<>();
 
@@ -84,24 +85,56 @@ public class FloodInJungle {
 			if (flag == 1)
 				continue;
 
+			Double totalEuclidieanThreshold = 0.0;
 			Double totalThreshold = 0.0;
 			for (Map.Entry<Integer, Tree> treeRemainingEntry : treeRemainingMap.entrySet()) {
 				Tree remainTree = treeRemainingEntry.getValue();
-				totalThreshold = totalThreshold
-						+ Math.abs(remainTree.getXi() - tree.getXi()) * remainTree.getThreshold();
+
+				totalEuclidieanThreshold = distance(new Point(tree.getXi(), tree.getYi()),
+						new Point(remainTree.getXi(), remainTree.getYi()));
+
+				if (totalEuclidieanThreshold <= totalCapacity)
+					totalThreshold = totalThreshold
+							+ Math.abs(remainTree.getXi() - tree.getXi()) * remainTree.getThreshold();
 			}
 
 			if (totalThreshold <= totalCapacity)
-				treesUsed = treesUsed + 1;
+				treesUsedList.add(treeEntry.getKey());
+
 		}
 
-		if (treesUsed == 0)
+		if (treesUsedList.isEmpty())
 			System.out.println("-1");
-		else
+		else {
+			String treesUsed = "";
+			for (Integer tree : treesUsedList)
+				treesUsed = treesUsed + tree + " ";
 			System.out.println(treesUsed);
-
+		}
 		System.exit(0);
 	}
+
+	static double distance(Point point1, Point point2) {
+		double xDiff = point1.x - point2.x;
+		double xSqr = Math.pow(xDiff, 2);
+
+		double yDiff = point1.y - point2.y;
+		double ySqr = Math.pow(yDiff, 2);
+
+		return Math.sqrt(xSqr + ySqr);
+	}
+}
+
+class Point {
+
+	Integer x;
+	Integer y;
+
+	Point(Integer x, Integer y) {
+		this.x = x;
+		this.y = y;
+	}
+
 }
 
 class Tree {
@@ -121,32 +154,16 @@ class Tree {
 		return xi;
 	}
 
-	public void setXi(Integer xi) {
-		this.xi = xi;
-	}
-
 	public Integer getYi() {
 		return yi;
-	}
-
-	public void setYi(Integer yi) {
-		this.yi = yi;
 	}
 
 	public Integer getMaxMonkey() {
 		return maxMonkey;
 	}
 
-	public void setMaxMonkey(Integer maxMonkey) {
-		this.maxMonkey = maxMonkey;
-	}
-
 	public Integer getThreshold() {
 		return threshold;
-	}
-
-	public void setThreshold(Integer threshold) {
-		this.threshold = threshold;
 	}
 
 }
