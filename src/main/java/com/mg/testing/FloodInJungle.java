@@ -1,9 +1,10 @@
 package com.mg.testing;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /*3 100.0
 1 10 5 5
@@ -39,7 +40,14 @@ import java.util.Scanner;
 1 10 5 5
 5 10 5 5
 8 10 5 4
--1*/
+-1
+
+3 100.0
+1 10 5 5
+5 10 5 5
+8 10 5 5
+3
+*/
 
 public class FloodInJungle {
 
@@ -52,14 +60,20 @@ public class FloodInJungle {
 		Integer noOfTrees = Integer.parseInt(firstLine[0]);
 		Double totalCapacity = Double.parseDouble(firstLine[1]);
 
-		ArrayList<Integer> treesUsedList = new ArrayList<>();
-
+		SortedSet<Integer> treesUsedSet = new TreeSet<>();
 		Map<Integer, Tree> treeMap = new HashMap<>();
 
 		for (int i = 0; i < noOfTrees; i++) {
 			String[] treeLine = scanner.nextLine().split(" ");
-			treeMap.put(i, new Tree(Integer.parseInt(treeLine[0]), Integer.parseInt(treeLine[1]),
-					Integer.parseInt(treeLine[2]), Integer.parseInt(treeLine[3])));
+			if (Integer.parseInt(treeLine[2]) >= 0 && Integer.parseInt(treeLine[2]) <= 15
+					&& Integer.parseInt(treeLine[3]) >= 1 && Integer.parseInt(treeLine[3]) <= 200)
+				treeMap.put(i, new Tree(Integer.parseInt(treeLine[0]), Integer.parseInt(treeLine[1]),
+						Integer.parseInt(treeLine[2]), Integer.parseInt(treeLine[3])));
+			else {
+				scanner.close();
+				System.out.println("-1");
+				return;
+			}
 		}
 		scanner.close();
 
@@ -73,41 +87,52 @@ public class FloodInJungle {
 					treeRemainingMap.put(treeEntry1.getKey(), treeEntry1.getValue());
 			}
 
+			Double totalEuclidieanThreshold = 0.0;
+
 			for (Map.Entry<Integer, Tree> treeRemainingEntry : treeRemainingMap.entrySet()) {
 				if (treeRemainingEntry.getValue().getMaxMonkey() > treeRemainingEntry.getValue().getThreshold()
 						|| treeRemainingEntry.getValue().getMaxMonkey() < treeRemainingEntry.getValue()
 								.getThreshold()) {
 					flag = 1;
 					break;
+				} else {
+					Tree remainTree = treeRemainingEntry.getValue();
+					totalEuclidieanThreshold = distance(new Point(tree.getXi(), tree.getYi()),
+							new Point(remainTree.getXi(), remainTree.getYi()));
+					if (totalEuclidieanThreshold > totalCapacity) {
+						flag = 1;
+						break;
+					}
 				}
 			}
 
 			if (flag == 1)
 				continue;
 
-			Double totalEuclidieanThreshold = 0.0;
-			Double totalThreshold = 0.0;
-			for (Map.Entry<Integer, Tree> treeRemainingEntry : treeRemainingMap.entrySet()) {
-				Tree remainTree = treeRemainingEntry.getValue();
-
-				totalEuclidieanThreshold = distance(new Point(tree.getXi(), tree.getYi()),
-						new Point(remainTree.getXi(), remainTree.getYi()));
-
-				if (totalEuclidieanThreshold <= totalCapacity)
-					totalThreshold = totalThreshold
-							+ Math.abs(remainTree.getXi() - tree.getXi()) * remainTree.getThreshold();
-			}
-
-			if (totalThreshold <= totalCapacity)
-				treesUsedList.add(treeEntry.getKey());
+			// Double totalThreshold = 0.0;
+			// for (Map.Entry<Integer, Tree> treeRemainingEntry :
+			// treeRemainingMap.entrySet()) {
+			// Tree remainTree = treeRemainingEntry.getValue();
+			//
+			// totalEuclidieanThreshold = distance(new Point(tree.getXi(),
+			// tree.getYi()),
+			// new Point(remainTree.getXi(), remainTree.getYi()));
+			//
+			// if (totalEuclidieanThreshold <= totalCapacity)
+			// totalThreshold = totalThreshold + totalEuclidieanThreshold *
+			// remainTree.getThreshold();
+			// }
+			//
+			// if (totalThreshold <= totalCapacity)
+			treesUsedSet.add(treeEntry.getKey());
 
 		}
 
-		if (treesUsedList.isEmpty())
+		if (treesUsedSet.isEmpty())
 			System.out.println("-1");
 		else {
 			String treesUsed = "";
-			for (Integer tree : treesUsedList)
+			for (Integer tree : treesUsedSet)
 				treesUsed = treesUsed + tree + " ";
 			System.out.println(treesUsed);
 		}
