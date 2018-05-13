@@ -35,6 +35,13 @@ import java.util.stream.Collectors;
 //1 2 5 4 8 7 5 2 1 4 5 2 5 4 6 9 8 7 5 2 1 4 5 2 4 2 1 2 1 5
 //0 0 0 0 2 5 4 1 7 8 5 4 6 3 2 1 4 1 0 0 0 1 4 2 4 2 1 5 1 2
 
+/*
+7
+1 2 3 2 3 1 1
+1 2 3 3 1 6 6
+ 
+ 6
+ */
 public class BobTheBear {
 
 	public static void main(String[] args) {
@@ -61,16 +68,12 @@ public class BobTheBear {
 				}
 			}
 
-			String[] salmonsArray = new String[salmonsNumber];
-
 			ArrayList<Integer> headList = new ArrayList<>();
 			ArrayList<Integer> tailList = new ArrayList<>();
 
 			for (int i = 0; i < salmonsNumber; i++) {
 				headList.add(Integer.parseInt(salmontime[i]));
 				tailList.add(Integer.parseInt(salmonLenths[i]) + Integer.parseInt(salmontime[i]));
-				salmonsArray[i] = salmontime[i] + ":"
-						+ (Integer.parseInt(salmonLenths[i]) + Integer.parseInt(salmontime[i]));
 			}
 
 			Integer firstHead = Collections.min(headList);
@@ -105,16 +108,17 @@ public class BobTheBear {
 						.map(e -> new AbstractMap.SimpleEntry<>(e.getKey(), new ArrayList<>(e.getValue())))
 						.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
 
-				Map<Integer, ArrayList<Integer>> salmonsLowerInnerMap = salmonsLowerMap;
-
-				salmonsLowerInnerMap.entrySet().forEach(entry -> entry.getValue().removeAll(salmonEntry.getValue()));
-
 				Integer innerMapMaxSalmons = 0;
+				if (salmonsLowerMap.size() > 0) {
+					Map<Integer, ArrayList<Integer>> salmonsLowerInnerMap = salmonsLowerMap;
 
-				if (salmonsLowerInnerMap.size() > 0)
+					salmonsLowerInnerMap.entrySet()
+							.forEach(entry -> entry.getValue().removeAll(salmonEntry.getValue()));
+
 					innerMapMaxSalmons = Collections.max(salmonsLowerInnerMap.entrySet(),
 							Comparator.comparingInt(entry -> entry.getValue().size())).getValue().size();
 
+				}
 				max.add(maxSalmonsUsed + innerMapMaxSalmons);
 			}
 			finalSalmonsUsed = Collections.max(max);
