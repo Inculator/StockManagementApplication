@@ -23,8 +23,9 @@ public class FreshBobTheBear {
 		String[] salmontime = time.split(" ");
 		Integer finalSalmonsUsed = 0;
 
-		if (salmonLenths.length == salmonsNumber && salmontime.length == salmonsNumber && salmonsNumber >= 1
-				&& salmonsNumber <= 1000) {
+		if (salmonsNumber >= 1 && salmonsNumber <= 1000 && salmonLenths.length == salmonsNumber
+				&& salmontime.length == salmonsNumber) {
+
 			for (int i = 0; i < salmonLenths.length; i++) {
 				if ("0".equalsIgnoreCase(salmonLenths[i])) {
 					System.out.println(finalSalmonsUsed);
