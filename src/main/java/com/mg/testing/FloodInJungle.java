@@ -40,13 +40,21 @@ import java.util.TreeSet;
 1 10 5 5
 5 10 5 5
 8 10 5 4
--1
+2
 
 3 100.0
 1 10 5 5
 5 10 5 5
 8 10 5 5
-3
+0 1 2
+
+
+3 100.0
+1 10 5 20
+5 10 5 20
+8 10 5 20
+
+0 1 2
 */
 
 public class FloodInJungle {
@@ -90,9 +98,8 @@ public class FloodInJungle {
 			Double totalEuclidieanThreshold = 0.0;
 
 			for (Map.Entry<Integer, Tree> treeRemainingEntry : treeRemainingMap.entrySet()) {
-				if (treeRemainingEntry.getValue().getMaxMonkey() > treeRemainingEntry.getValue().getThreshold()
-						|| treeRemainingEntry.getValue().getMaxMonkey() < treeRemainingEntry.getValue()
-								.getThreshold()) {
+				flag = 0;
+				if (treeRemainingEntry.getValue().getMaxMonkey() > treeRemainingEntry.getValue().getThreshold()) {
 					flag = 1;
 					break;
 				} else {
@@ -109,21 +116,6 @@ public class FloodInJungle {
 			if (flag == 1)
 				continue;
 
-			// Double totalThreshold = 0.0;
-			// for (Map.Entry<Integer, Tree> treeRemainingEntry :
-			// treeRemainingMap.entrySet()) {
-			// Tree remainTree = treeRemainingEntry.getValue();
-			//
-			// totalEuclidieanThreshold = distance(new Point(tree.getXi(),
-			// tree.getYi()),
-			// new Point(remainTree.getXi(), remainTree.getYi()));
-			//
-			// if (totalEuclidieanThreshold <= totalCapacity)
-			// totalThreshold = totalThreshold + totalEuclidieanThreshold *
-			// remainTree.getThreshold();
-			// }
-			//
-			// if (totalThreshold <= totalCapacity)
 			treesUsedSet.add(treeEntry.getKey());
 
 		}
