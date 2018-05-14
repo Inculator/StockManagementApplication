@@ -2,9 +2,11 @@ package com.mg.testing;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class FreshBobTheBear {
 
@@ -57,20 +59,24 @@ public class FreshBobTheBear {
 			}
 			ArrayList<Integer> salmonsUsedList = new ArrayList<>();
 
-			for (Map.Entry<Integer, ArrayList<Integer>> salmonTimeEntry : salmonsMap.entrySet()) {
+			Integer maxSalmonsAtATimeKey = Collections
+					.max(salmonsMap.entrySet(), Comparator.comparingInt(entry -> entry.getValue().size())).getKey();
+			
+			Map<Integer, ArrayList<Integer>> salmonsHigherMap = salmonsMap.entrySet().stream()
+					.filter(entry -> entry.getValue().size() == salmonsMap.get(maxSalmonsAtATimeKey).size())
+					.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
+
+			for (Map.Entry<Integer, ArrayList<Integer>> salmonTimeEntry : salmonsHigherMap.entrySet()) {
 				Integer salmonsUsed = 0;
 				ArrayList<Integer> list = new ArrayList<>();
 				salmonsUsed = salmonTimeEntry.getValue().size();
 				for (Map.Entry<Integer, ArrayList<Integer>> salmonTimeRemainingEntry : salmonsMap.entrySet()) {
 					if (salmonTimeRemainingEntry.getKey() != salmonTimeEntry.getKey()) {
-						ArrayList<Integer> list1 = new ArrayList<>();
-						list1 = salmonTimeRemainingEntry.getValue();
-						ArrayList<Integer> list2 = new ArrayList<>();
-						for (Integer i : list1) {
+						Integer size = 0;
+						for (Integer i : salmonTimeRemainingEntry.getValue()) 
 							if (!salmonTimeEntry.getValue().contains(i))
-								list2.add(i);
-						}
-						list.add(list2.size());
+								size = size + 1;
+						list.add(size);
 					}
 				}
 				salmonsUsed = salmonsUsed + Collections.max(list);
