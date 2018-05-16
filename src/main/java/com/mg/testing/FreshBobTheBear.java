@@ -2,11 +2,9 @@ package com.mg.testing;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class FreshBobTheBear {
 
@@ -43,12 +41,13 @@ public class FreshBobTheBear {
 				tailList.add(Integer.parseInt(salmonLenths[i]) + Integer.parseInt(salmontime[i]));
 			}
 
+			ArrayList<Integer> timeList = new ArrayList<>();
+			timeList.addAll(headList);
+			timeList.addAll(tailList);
+
 			Map<Integer, ArrayList<Integer>> salmonsMap = new HashMap<>();
 
-			Integer firstHead = Collections.min(headList);
-			Integer lastTail = Collections.max(tailList);
-
-			for (int t = firstHead; t <= lastTail; t++) {
+			for (Integer t : timeList) {
 
 				ArrayList<Integer> salmonsUsed = new ArrayList<>();
 				for (int i = 0; i < salmonsNumber; i++) {
@@ -56,26 +55,19 @@ public class FreshBobTheBear {
 						salmonsUsed.add(i + 1);
 				}
 
-				if(!salmonsUsed.isEmpty())
+				if (!salmonsUsed.isEmpty())
 					salmonsMap.put(t, salmonsUsed);
 			}
 			ArrayList<Integer> salmonsUsedList = new ArrayList<>();
 
-			Integer maxSalmonsAtATimeKey = Collections
-					.max(salmonsMap.entrySet(), Comparator.comparingInt(entry -> entry.getValue().size())).getKey();
-
-			Map<Integer, ArrayList<Integer>> salmonsHigherMap = salmonsMap.entrySet().stream()
-					.filter(entry -> entry.getValue().size() == salmonsMap.get(maxSalmonsAtATimeKey).size())
-					.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
-
-			for (Map.Entry<Integer, ArrayList<Integer>> salmonTimeEntry : salmonsHigherMap.entrySet()) {
+			for (Map.Entry<Integer, ArrayList<Integer>> salmonTimeEntry : salmonsMap.entrySet()) {
 				Integer salmonsUsed = 0;
 				ArrayList<Integer> list = new ArrayList<>();
 				salmonsUsed = salmonTimeEntry.getValue().size();
 				for (Map.Entry<Integer, ArrayList<Integer>> salmonTimeRemainingEntry : salmonsMap.entrySet()) {
 					if (salmonTimeRemainingEntry.getKey() != salmonTimeEntry.getKey()) {
 						Integer size = 0;
-						for (Integer i : salmonTimeRemainingEntry.getValue()) 
+						for (Integer i : salmonTimeRemainingEntry.getValue())
 							if (!salmonTimeEntry.getValue().contains(i))
 								size = size + 1;
 						list.add(size);
@@ -84,17 +76,16 @@ public class FreshBobTheBear {
 				salmonsUsed = salmonsUsed + Collections.max(list);
 
 				salmonsUsedList.add(salmonsUsed);
-				if(salmonsUsedList.contains(salmonsNumber))
+				if (salmonsUsedList.contains(salmonsNumber))
 					break;
 			}
 
-			if(!salmonsUsedList.isEmpty())
+			if (!salmonsUsedList.isEmpty())
 				System.out.println(Collections.max(salmonsUsedList));
 			else
 				System.out.println(0);
 			System.exit(0);
-		}
-		else
+		} else
 			System.out.println(finalSalmonsUsed);
 	}
 }
