@@ -55,13 +55,15 @@ public class FreshBobTheBear {
 					if (t >= headList.get(i) && t <= tailList.get(i))
 						salmonsUsed.add(i + 1);
 				}
-				salmonsMap.put(t, salmonsUsed);
+
+				if(!salmonsUsed.isEmpty())
+					salmonsMap.put(t, salmonsUsed);
 			}
 			ArrayList<Integer> salmonsUsedList = new ArrayList<>();
 
 			Integer maxSalmonsAtATimeKey = Collections
 					.max(salmonsMap.entrySet(), Comparator.comparingInt(entry -> entry.getValue().size())).getKey();
-			
+
 			Map<Integer, ArrayList<Integer>> salmonsHigherMap = salmonsMap.entrySet().stream()
 					.filter(entry -> entry.getValue().size() == salmonsMap.get(maxSalmonsAtATimeKey).size())
 					.collect(Collectors.toMap(p -> p.getKey(), p -> p.getValue()));
@@ -82,10 +84,17 @@ public class FreshBobTheBear {
 				salmonsUsed = salmonsUsed + Collections.max(list);
 
 				salmonsUsedList.add(salmonsUsed);
+				if(salmonsUsedList.contains(salmonsNumber))
+					break;
 			}
 
-			System.out.println(Collections.max(salmonsUsedList));
+			if(!salmonsUsedList.isEmpty())
+				System.out.println(Collections.max(salmonsUsedList));
+			else
+				System.out.println(0);
 			System.exit(0);
 		}
+		else
+			System.out.println(finalSalmonsUsed);
 	}
 }
