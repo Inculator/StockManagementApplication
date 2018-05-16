@@ -88,27 +88,23 @@ public class FloodInJungle {
 		for (Map.Entry<Integer, Tree> treeEntry : treeMap.entrySet()) {
 			Integer flag = 0;
 			Tree tree = treeEntry.getValue();
-
-			Map<Integer, Tree> treeRemainingMap = new HashMap<>();
-			for (Map.Entry<Integer, Tree> treeEntry1 : treeMap.entrySet()) {
-				if (treeEntry.getKey() != treeEntry1.getKey())
-					treeRemainingMap.put(treeEntry1.getKey(), treeEntry1.getValue());
-			}
-
 			Double totalEuclidieanThreshold = 0.0;
 
-			for (Map.Entry<Integer, Tree> treeRemainingEntry : treeRemainingMap.entrySet()) {
-				flag = 0;
-				if (treeRemainingEntry.getValue().getMaxMonkey() > treeRemainingEntry.getValue().getThreshold()) {
-					flag = 1;
-					break;
-				} else {
-					Tree remainTree = treeRemainingEntry.getValue();
-					totalEuclidieanThreshold = distance(new Point(tree.getXi(), tree.getYi()),
-							new Point(remainTree.getXi(), remainTree.getYi()));
-					if (totalEuclidieanThreshold > totalCapacity) {
+			for (Map.Entry<Integer, Tree> treeRemainingEntry : treeMap.entrySet()) {
+				if (treeRemainingEntry.getKey() != treeEntry.getKey()) {
+
+					flag = 0;
+					if (treeRemainingEntry.getValue().getMaxMonkey() > treeRemainingEntry.getValue().getThreshold()) {
 						flag = 1;
 						break;
+					} else {
+						Tree remainTree = treeRemainingEntry.getValue();
+						totalEuclidieanThreshold = distance(new Point(tree.getXi(), tree.getYi()),
+								new Point(remainTree.getXi(), remainTree.getYi()));
+						if (totalEuclidieanThreshold > totalCapacity) {
+							flag = 1;
+							break;
+						}
 					}
 				}
 			}
@@ -117,7 +113,6 @@ public class FloodInJungle {
 				continue;
 
 			treesUsedSet.add(treeEntry.getKey());
-
 		}
 
 		if (treesUsedSet.isEmpty())
